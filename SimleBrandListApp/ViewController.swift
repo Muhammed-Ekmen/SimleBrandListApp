@@ -42,11 +42,37 @@ In this app, we gonna see the some important features at the below. These are:
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {//CHECKPOINT 1
 
-    @IBOutlet weak var helloLabel: UILabel!
+    @IBOutlet weak var myTableView: UITableView!
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        assingDelegated()  // CHECKPOINT 1
     }
+    
+    fileprivate func assingDelegated() {
+        myTableView.delegate = self
+        myTableView.dataSource = self
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {   //CHECKPOINT 3
+        return Repo.shared.brands.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {  //CHECKPOINT 4
+        let cell:UITableViewCell = UITableViewCell()                  // we have created TableViewCell object to use it on our table.
+        cell.textLabel?.text = Repo.shared.brands[indexPath.row]      // that cell has default label,
+        return cell
+    }
+}
+
+
+class Repo{
+    private init(){}
+    static var shared:Repo = Repo()
+    var brands:[String] = ["Lamborghini","Maserati","Ferrari","Fiat"]  //CHECKPOINT2
 }
 
