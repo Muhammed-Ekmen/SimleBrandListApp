@@ -37,7 +37,12 @@ In this app, we gonna see the some important features at the below. These are:
     - collectionView function which include numberOfRowsInSection parameter, represent to how many row will seem on the screen.(CHECLPOINT 3)
     - collectionView function which include cellForRowAt, incluide the related row all properties. It is similar to ListTile function from Flutter.
     (in this function give us label from default and other features.)(CHECKPOINT 4)
-    - 
+    - From here on, we gonna deeplye review the tableStack properties. static and dynamic choice. its difference similar to listView and listView.builder
+    - there is cell field as CollectionView. click the cell and enter the identifier.
+    - if you want to use appbar with TableView, you can add navigationController and set up the features.(you can set up without storyboard.CHECKPOINT5)
+    - from here on, we gonna add the new brand on tableView.
+
+
 */
 
 import UIKit
@@ -51,7 +56,13 @@ class HomeViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         assingDelegated()  // CHECKPOINT 1
+          
     }
+    /*
+    func setUpTitle(){          //CHECKPOINT 5
+        self.title = "Brands"
+    }
+    */
     
     fileprivate func assingDelegated() {
         myTableView.delegate = self
@@ -63,7 +74,7 @@ class HomeViewController: UIViewController,UITableViewDataSource,UITableViewDele
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {  //CHECKPOINT 4
-        let cell:UITableViewCell = UITableViewCell()                  // we have created TableViewCell object to use it on our table.
+        let cell:UITableViewCell = myTableView.dequeueReusableCell(withIdentifier:"YOUR CELL INDENTIFIER")   // we have created TableViewCell object to use it on our table.
         cell.textLabel?.text = Repo.shared.brands[indexPath.row]      // that cell has default label,
         return cell
     }
