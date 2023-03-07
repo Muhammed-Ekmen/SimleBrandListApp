@@ -12,6 +12,7 @@ In this app, we gonna see the some important features at the below. These are:
 -   Detecting Application Icon
 -   TableView   
 -   SystemDefault(Same as shared_prefences)
+-   LifeCycle
 ----------------------------------------------------
     SETTING UP THE APP ICON 
     every app has icon as you know. IN the IOS, we can detect from right panel. There is a asset file on the panel. We have already used that if you 
@@ -61,21 +62,76 @@ In this app, we gonna see the some important features at the below. These are:
     to load value -----> UserDefault.standart.value(forKey: "your key") //CHECKPOINT 13
  
  
+    LIFECYCLE
+    [DESCRIPTION]
+    you have already known it from Flutter. for show how to use it,we gonna add the description features.
  
-*/
+ 
+    [USAGE]
+    - we gonna create the description label as much as brands count in a list.(CP14)
+    - but we shoudl clear the cache data to make sure that userDefault has no any data.(CP15)
+    - we gotta touch the some code lines so previous code flow doesn't crash.CP16 more than one exist look at all CP16!
+    - well,if we have created description repo,we can start the lifeCycles. But before the start,I wanna explain the what we gonna do.
+    
+    we have already list of brands. when we click the any brands we will go to description screen. After that, we can chagne the description
+    text. In additon,when we go back the lsit screen, description will save and go againt he description screen, new version will. Also,
+    if we remove the all descriptin from keyboard, that brand will delete. I mean, user wouln't wants to it. let's start.
+    
+    - create dummy description CP17
+    - reach the masterView(HomeViewController) from detailScreen(DetailViewController).CP18
+
+    - we gotta assing our HomeViewController to masterView on the DetailViewController. For doing that, go to prepare function. CP19
+ 
+    - go the DescriptionViewController, and create the our first lifeCycle function. it is "viewWillDissapper". it runs when you leave the
+    current screen to other screens, I mean it runs when your screen will dissapperd. CP20
+ 
+    - create our second lifeCycle function that "viewWillAppear". it runs when the current screen appear every time on your simulator or real
+    device. Be careful that difference between viewDidLoad and this. viewDidLoad runs only once when app init first time. but viewWillAppear
+    always working when related screen appeared. CP21
+ 
+    - from here on , we gonna set up the some back from Detail screen situation. But we gonna need to selected row index. For that, we have created
+    the selectedRowIndex CP22 and being operational CP23
+ 
+    - let's go deeply to lifeCycle and add the keyboard situation. when we go to detail screen, keybaord will open automatically. and same way,
+    it will close when you leave the detail screen. CP 24 on the DetailScreen.
+ 
+ */
 
 import UIKit
 
 class HomeViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {//CHECKPOINT 1
 
     @IBOutlet weak var myTableView: UITableView!
+    var dummyDescription:String = ""  //CP17
     
+    var selectedRowIndex:Int = -1  // CP22
+   
     
+    override func viewWillAppear(_ animated: Bool) {   // CP21
+        super.viewWillAppear(animated)
+        
+        if selectedRowIndex == -1 {        //that situation means that if any row is not selected, do nothing,
+            return
+        }
+        
+        if dummyDescription == "" {                                                 // in here, we have done that mentioned before.
+            Repo.shared.description.remove(at: selectedRowIndex)                    // we have said that when user removes the all desription,
+            Repo.shared.brands.remove(at: selectedRowIndex)                        // that brand will delete.
+        }else if dummyDescription == Repo.shared.description[selectedRowIndex]{  //if there is no changing, do nothing.
+            return
+        }else{
+            Repo.shared.description[selectedRowIndex] = dummyDescription  // if there is a changing, update your description according to your index.
+        }
+        saveData()                 //save your all change permantly.
+        myTableView.reloadData()  // reload your tableView.
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         assingDelegated()  // CHECKPOINT 1
         setUpTitle()
         loadPreviousData()
+        UserDefaults.standard.removeObject(forKey: Repo.shared.userDefaultKEY) // CP15
 //        let editButton = editButtonItem                                //CHECKPOINT 9
 //        editButton.tintColor = .white                                 // creating editButton and set up color. There are 2 type of how to add View.
 //        self.navigationItem.leftBarButtonItem = editButton           // First way is that and it uses for if there is only barButton.
@@ -110,9 +166,9 @@ class HomeViewController: UIViewController,UITableViewDataSource,UITableViewDele
     
     func addBrand(brand:String){                   //CHECKPOINT6
         Repo.shared.brands.insert(brand, at: 0)        // added the new brand to list.
+        Repo.shared.description.insert("None", at: 0) //CP16 when new brand added,description will be none. We will be able to change in progress.
         let indexPath:IndexPath = IndexPath(row: 0, section: 0)    //created indexpath for tableView.
         myTableView.insertRows(at: [indexPath], with: UITableView.RowAnimation.left) // added the tableView.
-        myTableView.selectRow(at: indexPath, animated: true, scrollPosition:.none)
         saveData()
     }
     
@@ -146,29 +202,38 @@ class HomeViewController: UIViewController,UITableViewDataSource,UITableViewDele
     func tableView(_ tableView:UITableView,commit editingStyle:UITableViewCell.EditingStyle,forRowAt indexPath:IndexPath){  //CHECKPOINT8
         if editingStyle == .delete{
             Repo.shared.brands.remove(at: indexPath.row)
+            Repo.shared.description.remove(at: indexPath.row)
             myTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
         }
     }
     
     func saveData(){      //CHECKPOINT 12 we have used it on the addBrand fucntion.
         UserDefaults.standard.set(Repo.shared.brands,forKey: Repo.shared.userDefaultKEY)
+        UserDefaults.standard.set(Repo.shared.description, forKey: Repo.shared.userDefaultKeyDes) //CP16 saved descriptions.
     }
     func loadPreviousData(){        //CHECKPOINT 13 also we have used on the viewDidLoad.
         if let previousData = UserDefaults.standard.value(forKey: Repo.shared.userDefaultKEY) as? [String] {
             Repo.shared.brands = previousData
-            myTableView.reloadData()
         }
+        
+        //CP16 we have done same things as brands.
+        if let previousDataDes = UserDefaults.standard.value(forKey: Repo.shared.userDefaultKeyDes) as? [String] {
+            Repo.shared.description = previousDataDes
+        }
+        myTableView.reloadData()
+
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {    //CHECKPOINT 14
         performSegue(withIdentifier: "detailPage", sender: self)
     }
     
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vc:DetailViewController = segue.destination as? DetailViewController{
-            Repo.shared.selectedRow = myTableView.indexPathForSelectedRow!.row
-            vc.settingUpTheDescription(des: Repo.shared.brands[Repo.shared.selectedRow])
-            vc.trialAssign(message: "is it work?")
+        if let vc:DetailViewController =  segue.destination as? DetailViewController{
+            selectedRowIndex = myTableView.indexPathForSelectedRow!.row               //CP 23
+            vc.fillDesCription(value: Repo.shared.description[selectedRowIndex])     //CP 23
+            vc.masterView = self //CP19
         }
     }
 }
@@ -179,6 +244,8 @@ class Repo{
     static var shared:Repo = Repo()
     var selectedRow:Int = 0
     var userDefaultKEY = "brand key"
+    var userDefaultKeyDes = "des key"
     var brands:[String] = ["Lamborghini","Maserati","Ferrari","Fiat"]  //CHECKPOINT2
+    var description:[String] = ["Aventedor","Gran Turismo","488GTB","500"]  // CP14
 }
 

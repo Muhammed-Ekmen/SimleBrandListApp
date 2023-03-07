@@ -101,27 +101,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DetailPage" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsb-Cr-nZW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="DetailPage" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsb-Cr-nZW">
                                 <rect key="frame" x="20" y="64" width="390" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9UL-af-FKT">
-                                <rect key="frame" x="20" y="93" width="390" height="243"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="z6x-u2-Gta">
+                                <rect key="frame" x="20" y="310" width="390" height="575"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HUa-pZ-P7a"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="z6x-u2-Gta" firstAttribute="leading" secondItem="AE0-Bk-lFk" secondAttribute="leadingMargin" id="8JT-vc-P46"/>
+                            <constraint firstItem="z6x-u2-Gta" firstAttribute="top" secondItem="HUa-pZ-P7a" secondAttribute="top" constant="155" id="ZlE-24-2DD"/>
+                            <constraint firstItem="z6x-u2-Gta" firstAttribute="leading" secondItem="zsb-Cr-nZW" secondAttribute="leading" id="aTq-ot-rI0"/>
+                            <constraint firstItem="z6x-u2-Gta" firstAttribute="trailing" secondItem="zsb-Cr-nZW" secondAttribute="trailing" id="feu-P6-Gf7"/>
+                            <constraint firstItem="z6x-u2-Gta" firstAttribute="trailing" secondItem="AE0-Bk-lFk" secondAttribute="trailingMargin" id="kYe-OG-Rgj"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="z6x-u2-Gta" secondAttribute="bottom" constant="-36" id="sgl-ld-JTY"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Y8W-Ul-6HR"/>
                     <connections>
-                        <outlet property="descriptionLabel" destination="9UL-af-FKT" id="F7J-z7-VFi"/>
+                        <outlet property="descriptionLabel" destination="z6x-u2-Gta" id="eN8-Qd-qya"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DZn-QJ-8QX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -130,6 +138,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -9,20 +9,29 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
-    @IBOutlet weak var descriptionLabel: UILabel!
-    var dummyDes:String = ""
-    
-    
+    @IBOutlet weak var descriptionLabel: UITextView!
+    var descriptionOption:String = ""
+    var masterView: HomeViewController?   //CP18
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        descriptionLabel.text = dummyDes
+        descriptionLabel.text =  descriptionOption
     }
     
-    func settingUpTheDescription(des:String){
-        dummyDes = des
-        if isViewLoaded{
-            descriptionLabel.text = dummyDes
+    func fillDesCription(value:String){
+        descriptionOption = value
+        if isViewLoaded {
+            descriptionLabel.text = descriptionOption
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {   //CP20
+        descriptionLabel.resignFirstResponder()          // CP24
+        masterView?.dummyDescription = descriptionLabel.text   // we have assigned the current text value which appear on the screen to dummyText.
+    }                                                         
+    
+    override func viewWillAppear(_ animated: Bool) {
+        descriptionLabel.becomeFirstResponder()         // CP 24
     }
     
 }
